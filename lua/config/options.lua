@@ -8,6 +8,7 @@ vim.opt.shiftwidth = 4
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+vim.fn.mkdir(vim.fn.expand(vim.o.undodir), "p")
 vim.opt.undofile = true
 
 vim.opt.hlsearch = true
@@ -41,3 +42,6 @@ vim.opt.inccommand = 'split'
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.opt.confirm = true
+
+-- Global statusline (lualine checks this for globalstatus)
+vim.opt.laststatus = 3

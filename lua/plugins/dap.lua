@@ -1,3 +1,7 @@
+local function get_args()
+	return vim.fn.input("Run with args: ")
+end
+
 return {
 	{
 		"mfussenegger/nvim-dap",
@@ -8,6 +12,7 @@ return {
 				opts = {},
 			},
 		},
+
 		-- stylua: ignore
 		keys = {
 			{ "<leader>dB", function() require("dap").set_breakpoint(vim.fn.input('Breakpoint condition: ')) end, desc = "Breakpoint Condition" },
@@ -47,8 +52,6 @@ return {
 		"jay-babu/mason-nvim-dap.nvim",
 		dependencies = "mason.nvim",
 		cmd = { "DapInstall", "DapUninstall" },
-		opts = {
-		},
-		config = function() end,
+		opts = {},
 	}
 }

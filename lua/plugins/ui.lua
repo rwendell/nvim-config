@@ -4,36 +4,14 @@ return {
 		event = "VeryLazy",
 		dependencies = { 'nvim-tree/nvim-web-devicons', "yavorski/lualine-macro-recording.nvim" },
 		opts = function()
-			require("lualine_require").require = require
-			local theme = "auto"
-			local palette = vim.g.tinted_palette
-			if palette and type(palette) == "table" then
-				local valid = {}
-				for k, v in pairs(palette) do
-					if type(v) == "string" and v:match("^#[0-9a-fA-F]+$") then
-						valid[k] = v
-					end
-				end
-				if valid.base01 and valid.base05 then
-					theme = {
-						normal = { fg = valid.base05, bg = valid.base01 },
-						insert = { fg = valid.base01, bg = valid.base09 or valid.base05 },
-						visual = { fg = valid.base01, bg = valid.base0A or valid.base05 },
-						replace = { fg = valid.base01, bg = valid.base08 or valid.base05 },
-						command = { fg = valid.base01, bg = valid.base0D or valid.base05 },
-						inactive = { fg = valid.base03 or valid.base05, bg = valid.base01 },
-					}
-					print("LUALINE THEME:", vim.inspect(theme))
-				end
-			end
 			return {
 				options = {
 					globalstatus = vim.o.laststatus == 3,
 					disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter", "snacks_dashboard" } },
-					theme = theme,
+					theme = "kissa",
 				},
 				sections = {
-					lualine_a = {},
+					lualine_a = { "mode" },
 					lualine_b = { 'branch', 'diff', 'diagnostics' },
 					lualine_c = { 'filename', 'macro_recording' },
 					lualine_x = {},

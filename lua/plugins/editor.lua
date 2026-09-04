@@ -30,13 +30,10 @@ return {
 	},
 	{
 		"lewis6991/gitsigns.nvim",
-		dependencies = { "nvim-lua/plenary.nvim", "purarue/gitsigns-yadm.nvim", },
+		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = {
 			signcolumn = false,
 			numhl = true,
-			_on_attach_pre = function(bufnr, callback)
-				require("gitsigns-yadm").yadm_signs(callback, { bufnr = bufnr })
-			end,
 		},
 	},
 	{
@@ -79,6 +76,20 @@ return {
 		"folke/snacks.nvim",
 		keys = {
 			{ "<leader>su", function() Snacks.picker.undo() end, desc = "Undotree" },
+			-- find
+			{ "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
+			{ "<leader>ff",     function() Snacks.picker.files() end,         desc = "Find Files" },
+			{ "<leader>fg",     function() Snacks.picker.git_files() end,     desc = "Git Files" },
+			{ "<leader>fH",     function() Snacks.picker.recent() end,        desc = "Recent Files" },
+			{ "<leader>,",      function() Snacks.picker.buffers() end,       desc = "Buffers" },
+			{ "<leader>:",      function() Snacks.picker.command_history() end, desc = "Command History" },
+			-- search
+			{ "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
+			{ "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep" },
+			{ "<leader>sG", function() Snacks.picker.grep({ cwd = vim.fn.expand("~") }) end, desc = "Global Grep (HOME)" },
+			{ "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Grep Word", mode = { "n", "x" } },
+			{ "<leader>sb", function() Snacks.picker.lines() end,           desc = "Buffer Lines" },
+			{ "<leader>sB", function() Snacks.picker.grep_buffers() end,    desc = "Grep Open Buffers" },
 		}
 	},
 	{
@@ -135,22 +146,11 @@ return {
 				{ "<leader>f", group = "file/find" },
 				{ "<leader>h", group = "harpoon", icon = "󰛢" },
 				{ "<leader>N", icon = "" },
-				{ "<leader>s", group = "Snacks", icon = "󱥰" },
+				{ "<leader>s", group = "search", icon = "󱥰" },
 				{ "<leader>u", icon = "" },
 				{ "<Leader>g", group = "git" },
 			}
 		},
-	},
-	{
-		"folke/trouble.nvim",
-		dependencies = { "folke/snacks.nvim" },
-		cmd = "Trouble",
-		opts = {
-			focus = true,
-			auto_close = true,
-			win = { type = "split", size = 6 },
-		},
-		keys = { { "<leader>ct", "<cmd>Trouble diagnostics <cr>" } }
 	},
 	{
 		"folke/todo-comments.nvim",
