@@ -4,9 +4,12 @@ end
 
 local function search_picker(mode, query)
 	local next_mode = mode == "files" and "grep" or "files"
+	local next_label = next_mode == "files" and "Files" or "Grep"
+	local label = mode == "files" and "Files" or "Grep"
 	local opts = {
 		cwd = project_root(),
 		search = query,
+		title = label .. " (<C-g> for " .. next_label .. ")",
 		actions = {
 			toggle_search = function(picker)
 				local search = picker.input:get()
@@ -107,9 +110,9 @@ return {
 	{
 		"folke/snacks.nvim",
 		keys = {
-			{ "<leader>su", function() Snacks.picker.undo() end, desc = "Undotree" },
+			{ "<leader>u", function() Snacks.picker.undo() end, desc = "Undotree" },
 			-- find and search
-			{ "<leader>sf",     function() search_picker("files") end,        desc = "Search Files/Text" },
+			{ "<leader>sf",     function() search_picker("files") end,        desc = "Search Files/Grep (<C-g> toggles)" },
 			{ "<leader>,",      function() Snacks.picker.buffers() end,       desc = "Buffers" },
 			{ "<leader>:",      function() Snacks.picker.command_history() end, desc = "Command History" },
 			{ "<leader>sb", function() Snacks.picker.lines() end,           desc = "Buffer Lines" },
@@ -167,7 +170,7 @@ return {
 				}
 			},
 			spec = {
-				{ "<leader>f", group = "file/find" },
+				{ "<leader>f", group = "file" },
 				{ "<leader>h", group = "harpoon", icon = "󰛢" },
 				{ "<leader>N", icon = "" },
 				{ "<leader>s", group = "search", icon = "󱥰" },
