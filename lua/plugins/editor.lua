@@ -1,3 +1,35 @@
+local function project_root()
+	return vim.fs.root(0, { ".git" }) or vim.fn.getcwd()
+end
+
+local function search_picker(mode, query)
+	local next_mode = mode == "files" and "grep" or "files"
+	local opts = {
+		cwd = project_root(),
+		search = query,
+		actions = {
+			toggle_search = function(picker)
+				local search = picker.input:get()
+				picker:close()
+				vim.schedule(function() search_picker(next_mode, search) end)
+			end,
+		},
+		win = {
+			input = {
+				keys = {
+					["<C-g>"] = { "toggle_search", mode = { "i", "n" }, desc = "Toggle Files/Grep" },
+				},
+			},
+		},
+	}
+
+	if mode == "files" then
+		Snacks.picker.files(opts)
+	else
+		Snacks.picker.grep(opts)
+	end
+end
+
 return {
 	{
 		'stevearc/oil.nvim',
@@ -76,18 +108,10 @@ return {
 		"folke/snacks.nvim",
 		keys = {
 			{ "<leader>su", function() Snacks.picker.undo() end, desc = "Undotree" },
-			-- find
-			{ "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
-			{ "<leader>ff",     function() Snacks.picker.files() end,         desc = "Find Files" },
-			{ "<leader>fg",     function() Snacks.picker.git_files() end,     desc = "Git Files" },
-			{ "<leader>fH",     function() Snacks.picker.recent() end,        desc = "Recent Files" },
+			-- find and search
+			{ "<leader>sf",     function() search_picker("files") end,        desc = "Search Files/Text" },
 			{ "<leader>,",      function() Snacks.picker.buffers() end,       desc = "Buffers" },
 			{ "<leader>:",      function() Snacks.picker.command_history() end, desc = "Command History" },
-			-- search
-			{ "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
-			{ "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep" },
-			{ "<leader>sG", function() Snacks.picker.grep({ cwd = vim.fn.expand("~") }) end, desc = "Global Grep (HOME)" },
-			{ "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Grep Word", mode = { "n", "x" } },
 			{ "<leader>sb", function() Snacks.picker.lines() end,           desc = "Buffer Lines" },
 			{ "<leader>sB", function() Snacks.picker.grep_buffers() end,    desc = "Grep Open Buffers" },
 		}
