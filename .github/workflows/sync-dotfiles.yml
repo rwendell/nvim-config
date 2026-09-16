@@ -1,0 +1,71 @@
+name: Sync dotfiles
+
+# Mirror the standalone nvim config (repo root) back to the
+# chezmoi-managed path (dot_config/nvim) in private rwendell/dotfiles.
+# Only syncs nvim files, nothing else.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "lua/**"
+      - "init.lua"
+      - ".gitignore"
+      - "lazy-lock.json"
+      - ".github/workflows/sync-dotfiles.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    # Prevent loops from forward sync: skip bot pushes and sync commits.
+    if: github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, '[skip sync]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout nvim-config (source of truth)
+        uses: actions/checkout@v4
+        with:
+          path: nvim-config
+
+      - name: Checkout dotfiles (sync target)
+        uses: actions/checkout@v4
+        with:
+          repository: rwendell/dotfiles
+          token: ${{ secrets.DOTFILES_SYNC_TOKEN }}
+          path: dotfiles
+
+      - name: Build chezmoi source from nvim config
+        run: |
+          set -euo pipefail
+          STAGING="$(mktemp -d)"
+          echo "STAGING=$STAGING" >> "$GITHUB_ENV"
+          cp -a nvim-config/. "$STAGING"/
+          rm -rf "$STAGING/.git" "$STAGING/.github"
+          # reverse chezmoi dot_ prefix translation (.gitignore -> dot_gitignore)
+          if [ -e "$STAGING/.gitignore" ]; then
+            mv "$STAGING/.gitignore" "$STAGING/dot_gitignore"
+          fi
+          mkdir -p dotfiles/dot_config/nvim
+          rsync -av --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            "$STAGING"/ dotfiles/dot_config/nvim/
+          echo "--- staged content ---"
+          ls -la dotfiles/dot_config/nvim/
+          echo "--- diff ---"
+          git -C dotfiles status --short || true
+
+      - name: Commit and push if changed
+        working-directory: dotfiles
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dot_config/nvim
+          if git diff --cached --quiet; then
+            echo "No dotfiles changes to push."
+            exit 0
+          fi
+          git commit -m "sync: update from nvim-config $(git -C ../nvim-config rev-parse --short HEAD) [skip sync]"
+          git push origin HEAD:main

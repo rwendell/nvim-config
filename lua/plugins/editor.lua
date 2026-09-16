@@ -113,8 +113,16 @@ return {
 			{ "<leader>u", function() Snacks.picker.undo() end, desc = "Undotree" },
 			-- find and search
 			{ "<leader>sf",     function() search_picker("files") end,        desc = "Search Files/Grep (<C-g> toggles)" },
+			{ "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
+			{ "<leader>ff",     function() Snacks.picker.files() end,         desc = "Find Files" },
+			{ "<leader>fg",     function() Snacks.picker.git_files() end,     desc = "Git Files" },
+			{ "<leader>fH",     function() Snacks.picker.recent() end,        desc = "Recent Files" },
 			{ "<leader>,",      function() Snacks.picker.buffers() end,       desc = "Buffers" },
 			{ "<leader>:",      function() Snacks.picker.command_history() end, desc = "Command History" },
+			{ "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
+			{ "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep" },
+			{ "<leader>sG", function() Snacks.picker.grep({ cwd = vim.fn.expand("~") }) end, desc = "Global Grep (HOME)" },
+			{ "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Grep Word", mode = { "n", "x" } },
 			{ "<leader>sb", function() Snacks.picker.lines() end,           desc = "Buffer Lines" },
 			{ "<leader>sB", function() Snacks.picker.grep_buffers() end,    desc = "Grep Open Buffers" },
 		}
