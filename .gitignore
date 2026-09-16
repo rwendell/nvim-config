@@ -1,1 +1,3 @@
-lazy-lock.json
+# lazy-lock.json is intentionally TRACKED (see lazy.nvim docs: "it is
+# recommended to have this file under version control" for multi-machine
+# reproducibility via :Lazy restore). Do not ignore it.
