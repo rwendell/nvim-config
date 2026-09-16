@@ -10,7 +10,6 @@ on:
       - "lua/**"
       - "init.lua"
       - ".gitignore"
-      - "lazy-lock.json"
       - ".github/workflows/sync-dotfiles.yml"
   workflow_dispatch:
 
@@ -46,10 +45,13 @@ jobs:
           if [ -e "$STAGING/.gitignore" ]; then
             mv "$STAGING/.gitignore" "$STAGING/dot_gitignore"
           fi
+          # NOTE: lazy-lock.json is gitignored here but committed in dotfiles —
+          # never delete it from the target.
           mkdir -p dotfiles/dot_config/nvim
           rsync -av --delete \
             --exclude='.git/' \
             --exclude='.github/' \
+            --exclude='lazy-lock.json' \
             "$STAGING"/ dotfiles/dot_config/nvim/
           echo "--- staged content ---"
           ls -la dotfiles/dot_config/nvim/
