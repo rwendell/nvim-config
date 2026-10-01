@@ -67,8 +67,14 @@ return {
 		"lewis6991/gitsigns.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = {
-			signcolumn = false,
+			-- signcolumn = false,
 			numhl = true,
+			attach_to_untracked = true,
+			current_line_blame = true,
+			current_line_blame_opts = {
+				ignore_whitespace = true,
+
+			},
 		},
 	},
 	{

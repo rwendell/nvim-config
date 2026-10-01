@@ -2,6 +2,9 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		config = function()
+			-- Enable biome explicitly so it attaches via the project's
+			-- own node_modules/.bin/biome even before Mason's copy exists.
+			vim.lsp.enable("biome")
 			local symbols = { Error = "󰅙", Info = "󰋼", Hint = "󰌵", Warn = "" }
 			for name, icon in pairs(symbols) do
 				local hl = "DiagnosticSign" .. name
@@ -15,7 +18,7 @@ return {
 	},
 	{
 		"mason-org/mason-lspconfig.nvim",
-		opts = { ensure_installed = { "svelte" } },
+		opts = { ensure_installed = { "svelte", "biome" } },
 		dependencies = {
 			{ "mason-org/mason.nvim", opts = {} },
 			"neovim/nvim-lspconfig",
