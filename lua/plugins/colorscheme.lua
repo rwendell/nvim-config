@@ -69,14 +69,8 @@
 --
 
 return {
-	{
-		"f-person/auto-dark-mode.nvim",
-		lazy = false,
-		priority = 1100,
-		opts = {
-			update_interval = 5000,
-		},
-	},
+	-- Neovim 0.11+ TUI follows the terminal background; Kissa's "auto"
+	-- variant switches between latte and macchiato on OptionSet background.
 	{
 		"rwendell/kissa",
 		lazy = false,

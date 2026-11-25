@@ -19,9 +19,8 @@ vim.opt.rtp:prepend(lazypath)
 -- This is also a good place to setup other settings (vim.opt)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
--- Set `background` explicitly so auto-dark-mode.nvim and tinted-nvim can
--- detect/override it (a nil value breaks their dark/light detection)
-vim.o.background = "dark"
+-- Let the TUI detect the terminal background via OSC 11/DSR. Setting
+-- 'background' explicitly disables Neovim's automatic detection.
 -- Setup lazy.nvim
 require("lazy").setup({
 	spec = {
